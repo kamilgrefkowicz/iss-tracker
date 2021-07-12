@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+
 public class ISSLocatorImpl implements ISSLocator {
 
     @Value("${app.api.2nyo.key}")
-    private final String apiKey;
+    private  String apiKey;
 }
