@@ -33,7 +33,7 @@ public class ISSLocatorImpl implements ISSLocator {
     private static final String MINIMUM_VISIBILITY_SECONDS = "300";
 
     @Override
-    public List<FlyOver> findFlyOversForNextThreeDays(CurrentLocation currentLocation, LocalDateTime now) throws JsonProcessingException {
+    public List<FlyOver> findFlyOversForNextThreeDays(CurrentLocation currentLocation)   {
 
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> parameters = getPathParameters(currentLocation);
@@ -45,10 +45,16 @@ public class ISSLocatorImpl implements ISSLocator {
 
         List<FlyOver> possFlyOvers = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(response.getBody());
-        jsonNode.get("passes").forEach(pass -> possFlyOvers.add(new FlyOver(pass)));
+        JsonNode root;
+        try {
+            root = objectMapper.readTree(response.getBody());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new RestClientException("Something went wrong on ISS tracking api's side");
+        }
+        root.get("passes").forEach(pass -> possFlyOvers.add(new FlyOver(pass)));
 
-        return null;
+        return possFlyOvers;
     }
 
     @NotNull

@@ -8,5 +8,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ISSLocator {
-    List<FlyOver> findFlyOversForNextThreeDays(CurrentLocation currentLocation, LocalDateTime now) throws JsonProcessingException;
+    List<FlyOver> findFlyOversForNextThreeDays(CurrentLocation currentLocation) ;
 }
