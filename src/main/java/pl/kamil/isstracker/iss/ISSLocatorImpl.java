@@ -27,7 +27,7 @@ public class ISSLocatorImpl implements ISSLocator {
     @Value("${app.api.2nyo.key}")
     private String apiKey;
 
-    private static final String N2YO_BASE_URL = "https://api.n2yo.com/rest/v1/satellite/";
+    private static final String N2YO_BASE_URL = "https://api.n2yo.com/rest/v1/satellite/visualpasses/{id}/{observer_lat}/{observer_lng}/{observer_alt}/{days}/{min_visibility}/&apiKey={api_key}";
     private static final String ISS_NORAD_ID = "25544";
     private static final String DAYS_SEARCHED = "3";
     private static final String MINIMUM_VISIBILITY_SECONDS = "300";
@@ -39,7 +39,7 @@ public class ISSLocatorImpl implements ISSLocator {
         Map<String, String> parameters = getPathParameters(currentLocation);
 
         ResponseEntity<String> response
-                = restTemplate.getForEntity(N2YO_BASE_URL + "/visualpasses/{id}/{observer_lat}/{observer_lng}/{observer_alt}/{days}/{min_visibility}/&apiKey={api_key}", String.class, parameters);
+                = restTemplate.getForEntity(N2YO_BASE_URL , String.class, parameters);
 
         if (response.getStatusCode().isError()) throw new RestClientException("ISS tracking api is down");
 

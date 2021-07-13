@@ -1,8 +1,10 @@
 package pl.kamil.isstracker.spotter;
 
-import java.time.LocalDateTime;
+import pl.kamil.isstracker.shared.FlyOver;
+
+import java.util.List;
 
 public interface SpotterService {
 
-    void findNextVisibleFlyOver(CurrentLocation currentLocation);
+    List<FlyOver> findNextVisibleFlyOver(CurrentLocation currentLocation);
 }

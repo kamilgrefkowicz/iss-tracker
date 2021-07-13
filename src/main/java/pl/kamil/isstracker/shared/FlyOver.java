@@ -13,6 +13,7 @@ public class FlyOver {
     private float endAzimuth;
     private int startUtc;
     private int endUtc;
+    private int cloudPercentage;
 
     public FlyOver(JsonNode pass) {
         this.startAzimuth = pass.get("startAz").floatValue();

@@ -8,6 +8,7 @@ import pl.kamil.isstracker.shared.CloudData;
 import pl.kamil.isstracker.weather.WeatherService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,11 +19,19 @@ public class SpotterServiceImpl implements SpotterService {
 
 
     @Override
-    public void findNextVisibleFlyOver(CurrentLocation currentLocation) {
+    public List<FlyOver> findNextVisibleFlyOver(CurrentLocation currentLocation) {
 
         List<FlyOver> possibleFlyOvers = issLocator.findFlyOversForNextThreeDays(currentLocation);
         List<CloudData> cloudData = weatherService.getWeatherData(currentLocation);
 
-        cloudData.get(1);
+        for (FlyOver flyover : possibleFlyOvers) {
+            int flyoverStartUtc = flyover.getStartUtc();
+            Optional<CloudData> cloudDataOnFlyOver = cloudData.stream()
+                    .filter(cloud -> cloud.getTimeUTC() > flyoverStartUtc)
+                    .findFirst();
+            if (cloudDataOnFlyOver.isEmpty()) return possibleFlyOvers;
+            flyover.setCloudPercentage(cloudDataOnFlyOver.get().getCloudPercentage());
+        }
+        return possibleFlyOvers;
     }
 }
