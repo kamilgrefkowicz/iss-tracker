@@ -15,7 +15,6 @@
 <form th:action="@{/get-result}" th:object="${location}">
     <input type="number" step="0.001" id="latitude" th:field="*{latitude}">
     <input type="number" step="0.001" id="longitude" th:field="*{longitude}">
-    <input type="number" step="0.001" id="altitude" th:field="*{altitude}">
     <input type="submit">
 </form>
 

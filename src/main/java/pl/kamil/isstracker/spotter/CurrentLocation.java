@@ -9,5 +9,4 @@ public class CurrentLocation {
 
     private BigDecimal latitude;
     private BigDecimal longitude;
-    private BigDecimal altitude;
 }
