@@ -1,5 +1,6 @@
 package pl.kamil.isstracker.spotter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class SpotterServiceImpl implements SpotterService {
 
     @Override
     public void findNextVisibleFlyOver(CurrentLocation currentLocation) {
-        List<FlyOver> possibleFlyOvers = issLocator.findFlyOversForNextThreeDays(currentLocation, LocalDateTime.now());
+        try {
+            List<FlyOver> possibleFlyOvers = issLocator.findFlyOversForNextThreeDays(currentLocation, LocalDateTime.now());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }
