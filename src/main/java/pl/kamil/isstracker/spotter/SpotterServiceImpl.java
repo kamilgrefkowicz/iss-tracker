@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import pl.kamil.isstracker.iss.ISSLocator;
 import pl.kamil.isstracker.shared.FlyOver;
 import pl.kamil.isstracker.shared.CloudData;
+import pl.kamil.isstracker.timezone.TimezoneFinder;
 import pl.kamil.isstracker.weather.WeatherService;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,7 @@ public class SpotterServiceImpl implements SpotterService {
 
     private final ISSLocator issLocator;
     private final WeatherService weatherService;
+    private final TimezoneFinder timezoneFinder;
 
 
     @Override
@@ -23,6 +26,7 @@ public class SpotterServiceImpl implements SpotterService {
 
         List<FlyOver> possibleFlyOvers = issLocator.findFlyOversForNextThreeDays(currentLocation);
         List<CloudData> cloudData = weatherService.getWeatherData(currentLocation);
+        String zoneId = timezoneFinder.getZoneId(currentLocation);
 
         for (FlyOver flyover : possibleFlyOvers) {
             int flyoverStartUtc = flyover.getStartUtc();
