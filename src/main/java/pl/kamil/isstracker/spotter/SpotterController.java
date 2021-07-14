@@ -6,9 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.kamil.isstracker.shared.FullFlyOverData;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -26,9 +27,14 @@ public class SpotterController {
     @GetMapping("get-result")
     public String getResults(Model model, @Valid CurrentLocation currentLocation, BindingResult bindingResult) {
 
-        spotterService.findNextVisibleFlyOver(currentLocation);
+        List<FullFlyOverData> possibleFlyOvers = spotterService.findPossibleFlyOvers(currentLocation);
+        model.addAttribute(possibleFlyOvers);
 
         return "result";
 
+    }
+    @GetMapping("map")
+    public String showStreetView(Model model) {
+        return "map";
     }
 }

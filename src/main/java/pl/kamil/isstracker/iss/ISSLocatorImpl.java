@@ -13,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
 import pl.kamil.isstracker.shared.FlyOver;
 import pl.kamil.isstracker.spotter.CurrentLocation;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +42,11 @@ public class ISSLocatorImpl implements ISSLocator {
 
         if (response.getStatusCode().isError()) throw new RestClientException("ISS tracking api is down");
 
+        return parseFlyOverData(response);
+    }
+
+    @NotNull
+    private List<FlyOver> parseFlyOverData(ResponseEntity<String> response) {
         List<FlyOver> possFlyOvers = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode root;
@@ -53,7 +57,6 @@ public class ISSLocatorImpl implements ISSLocator {
             throw new RestClientException("Something went wrong on ISS tracking api's side");
         }
         root.get("passes").forEach(pass -> possFlyOvers.add(new FlyOver(pass)));
-
         return possFlyOvers;
     }
 
