@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
+    <title> INSERT </title>
+</head>
+<body>
+<div th:each="flyover : ${fullFlyOverDataList}">
+    <table>
+        <thead>
+        <tr>
+            <th>Start azimuth</th>
+            <th>Max azimuth</th>
+            <th>End azimuth</th>
+            <th>Max elevation</th>
+            <th>Start time</th>
+            <th>End time</th>
+            <th>Cloud % estimate</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${flyover.startAzimuth}"></td>
+            <td th:text="${flyover.maxAzimuth}"></td>
+            <td th:text="${flyover.endAzimuth}"></td>
+            <td th:text="${flyover.maxElevation}"></td>
+            <td th:text="${flyover.start}"></td>
+            <td th:text="${flyover.end}"></td>
+            <td th:text="${flyover.cloudPercentage}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+</body>
+</html>

@@ -13,10 +13,10 @@ public class TimezoneFinderImpl implements TimezoneFinder {
     private final TimeZoneEngine timeZoneEngine = TimeZoneEngine.initialize();
 
 
-    public String getZoneId(CurrentLocation location) {
+    public ZoneId getZoneId(CurrentLocation location) {
         Optional<ZoneId> zoneIdOptional = timeZoneEngine.query(location.getLatitude().doubleValue(), location.getLongitude().doubleValue());
         if (zoneIdOptional.isEmpty()) throw new RuntimeException();
-        return zoneIdOptional.get().getId();
+        return zoneIdOptional.get();
     }
 }
 
