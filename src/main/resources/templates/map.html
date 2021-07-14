@@ -16,10 +16,11 @@
 </div>
 <div id="map"></div>
 
+
 <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
 <script
         th:src="@{'https://maps.googleapis.com/maps/api/js?key='+${@mapService.getGoggleMapApiKey()}+'&callback=initMap&libraries=&v=weekly'}"
         async
 ></script>
-
+<div id="pov" data-latitude="54.523000" data-longitude="18.539000"></div>
 </body>

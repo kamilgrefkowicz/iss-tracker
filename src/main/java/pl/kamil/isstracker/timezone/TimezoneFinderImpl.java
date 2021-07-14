@@ -2,7 +2,7 @@ package pl.kamil.isstracker.timezone;
 
 import net.iakovlev.timeshape.TimeZoneEngine;
 import org.springframework.stereotype.Service;
-import pl.kamil.isstracker.spotter.CurrentLocation;
+import pl.kamil.isstracker.shared.CurrentLocation;
 
 import java.time.ZoneId;
 import java.util.Optional;

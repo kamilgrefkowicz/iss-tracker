@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import pl.kamil.isstracker.iss.ISSLocator;
+import pl.kamil.isstracker.shared.CurrentLocation;
 import pl.kamil.isstracker.shared.FlyOver;
 import pl.kamil.isstracker.shared.CloudData;
 import pl.kamil.isstracker.shared.FullFlyOverData;
@@ -11,9 +12,7 @@ import pl.kamil.isstracker.timezone.TimezoneFinder;
 import pl.kamil.isstracker.weather.WeatherService;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

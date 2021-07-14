@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import pl.kamil.isstracker.shared.FlyOver;
-import pl.kamil.isstracker.spotter.CurrentLocation;
+import pl.kamil.isstracker.shared.CurrentLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;

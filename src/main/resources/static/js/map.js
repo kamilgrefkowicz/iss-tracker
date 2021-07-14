@@ -1,10 +1,14 @@
 let panorama;
 
 function initMap() {
-    const astorPlace = { lat: 40.729884, lng: -73.990988 };
+    const pov = document.querySelector('#pov');
+
+
+
+    const centerPoint = { lat: Number(pov.dataset.latitude), lng: Number(pov.dataset.longitude) };
     // Set up the map
     const map = new google.maps.Map(document.getElementById("map"), {
-        center: astorPlace,
+        center: centerPoint,
         zoom: 18,
         streetViewControl: false,
     });
@@ -31,7 +35,7 @@ function initMap() {
     // We get the map's default panorama and set up some defaults.
     // Note that we don't yet set it visible.
     panorama = map.getStreetView(); // TODO fix type
-    panorama.setPosition(astorPlace);
+    panorama.setPosition(centerPoint);
     panorama.setPov(
         /** @type {google.maps.StreetViewPov} */ {
             heading: 265,

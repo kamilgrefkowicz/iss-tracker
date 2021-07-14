@@ -1,4 +1,4 @@
-package pl.kamil.isstracker.spotter;
+package pl.kamil.isstracker.shared;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package pl.kamil.isstracker.timezone;
 
-import pl.kamil.isstracker.spotter.CurrentLocation;
+import pl.kamil.isstracker.shared.CurrentLocation;
 
 import java.time.ZoneId;
 
