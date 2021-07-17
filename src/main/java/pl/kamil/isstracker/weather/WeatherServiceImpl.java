@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import pl.kamil.isstracker.shared.CloudData;
-import pl.kamil.isstracker.shared.CurrentLocation;
+import pl.kamil.isstracker.shared.dto.CloudData;
+import pl.kamil.isstracker.shared.dto.LocationData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,10 +27,10 @@ public class WeatherServiceImpl implements WeatherService {
     private static final String OPEN_WEATHER_MAP_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}";
 
     @Override
-    public List<CloudData> getWeatherData(CurrentLocation currentLocation) {
+    public List<CloudData> getWeatherData(LocationData locationData) {
 
         RestTemplate restTemplate = new RestTemplate();
-        Map<String, String> parameters = getPathParameters(currentLocation);
+        Map<String, String> parameters = getPathParameters(locationData);
 
         ResponseEntity<String> response
                 = restTemplate.getForEntity(OPEN_WEATHER_MAP_BASE_URL, String.class, parameters);
@@ -52,10 +52,10 @@ public class WeatherServiceImpl implements WeatherService {
 
     }
 
-    private Map<String, String> getPathParameters(CurrentLocation currentLocation) {
+    private Map<String, String> getPathParameters(LocationData locationData) {
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("lat", currentLocation.getLatitude().toString());
-        parameters.put("lon", currentLocation.getLongitude().toString());
+        parameters.put("lat", locationData.getLatitude().toString());
+        parameters.put("lon", locationData.getLongitude().toString());
         parameters.put("API key", key);
         return parameters;
     }

@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.kamil.isstracker.shared.CurrentLocation;
-import pl.kamil.isstracker.shared.FullFlyOverData;
+import pl.kamil.isstracker.shared.dto.LocationData;
+import pl.kamil.isstracker.shared.dto.FullSpottingData;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,14 +21,14 @@ public class SpotterController {
 
     @GetMapping({"", "/", "home"})
     public String home(Model model) {
-        model.addAttribute("location", new CurrentLocation());
+        model.addAttribute("location", new LocationData());
         return "home";
     }
 
     @GetMapping("get-result")
-    public String getResults(Model model, @Valid CurrentLocation currentLocation, BindingResult bindingResult) {
+    public String getResults(Model model, @Valid LocationData locationData, BindingResult bindingResult) {
 
-        List<FullFlyOverData> possibleFlyOvers = spotterService.findPossibleFlyOvers(currentLocation);
+        List<FullSpottingData> possibleFlyOvers = spotterService.findPossibleFlyOvers(locationData);
         model.addAttribute(possibleFlyOvers);
 
         return "result";

@@ -1,13 +1,14 @@
 package pl.kamil.isstracker.spotter;
 
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import pl.kamil.isstracker.iss.ISSLocator;
-import pl.kamil.isstracker.shared.CurrentLocation;
-import pl.kamil.isstracker.shared.FlyOver;
-import pl.kamil.isstracker.shared.CloudData;
-import pl.kamil.isstracker.shared.FullFlyOverData;
+import pl.kamil.isstracker.map_marker.CalculateMarkerCommand;
+import pl.kamil.isstracker.map_marker.Geocalculator;
+import pl.kamil.isstracker.shared.dto.LocationData;
+import pl.kamil.isstracker.shared.dto.FlyOver;
+import pl.kamil.isstracker.shared.dto.CloudData;
+import pl.kamil.isstracker.shared.dto.FullSpottingData;
 import pl.kamil.isstracker.timezone.TimezoneFinder;
 import pl.kamil.isstracker.weather.WeatherService;
 
@@ -24,33 +25,57 @@ public class SpotterServiceImpl implements SpotterService {
     private final ISSLocator issLocator;
     private final WeatherService weatherService;
     private final TimezoneFinder timezoneFinder;
+    private final Geocalculator geocalculator;
 
 
     @Override
-    public List<FullFlyOverData> findPossibleFlyOvers(CurrentLocation currentLocation) {
+    public List<FullSpottingData> findPossibleFlyOvers(LocationData locationData) {
 
-        List<FlyOver> possibleFlyOvers = issLocator.findFlyOversForNextThreeDays(currentLocation);
-        List<CloudData> cloudData = weatherService.getWeatherData(currentLocation);
-        ZoneId zoneId = timezoneFinder.getZoneId(currentLocation);
-        List<FullFlyOverData> fullFlyOverData = new ArrayList<>();
+        List<FlyOver> possibleFlyOvers = issLocator.findFlyOversForNextThreeDays(locationData);
+        List<CloudData> cloudData = weatherService.getWeatherData(locationData);
+        ZoneId zoneId = timezoneFinder.getZoneId(locationData);
+        List<FullSpottingData> fullFlyoverDataSet = new ArrayList<>();
 
+        aggregateData(possibleFlyOvers, cloudData, zoneId, fullFlyoverDataSet, locationData);
+
+        return fullFlyoverDataSet;
+    }
+
+    private void aggregateData(List<FlyOver> possibleFlyOvers, List<CloudData> cloudData, ZoneId zoneId, List<FullSpottingData> fullFlyoverDataSet, LocationData locationData) {
         for (FlyOver flyover : possibleFlyOvers) {
-            FullFlyOverData data = convertToFull(flyover);
+            FullSpottingData data = convertToFull(flyover);
+            setSpottingLocation(data, locationData);
+            setFlyoverTimes(flyover, data, zoneId);
+            setMapMarkers(data);
 
             Optional<CloudData> cloudDataOnFlyOver = getCloudData(cloudData, flyover);
             if (cloudDataOnFlyOver.isEmpty()) continue;
-
             data.setCloudPercentage(cloudDataOnFlyOver.get().getCloudPercentage());
-            setFlyoverTimes(flyover, data, zoneId);
 
-            fullFlyOverData.add(data);
+
+            fullFlyoverDataSet.add(data);
         }
-        return fullFlyOverData;
     }
 
-    private void setFlyoverTimes(FlyOver flyover, FullFlyOverData data, ZoneId zoneId) {
-        data.setStart(Instant.ofEpochSecond(flyover.getStartUtc()).atZone(zoneId));
-        data.setEnd(Instant.ofEpochSecond(flyover.getEndUtc()).atZone(zoneId));
+    private void setMapMarkers(FullSpottingData data) {
+
+        LocationData flyoverStart = geocalculator.getMarker(new CalculateMarkerCommand(data.getSpottingLocationLatitude(), data.getSpottingLocationLongitude(), data.getFlyoverStartAzimuth()));
+        data.setStartMarkerLatitude(flyoverStart.getLatitude());
+        data.setStartMarkerLongitude(flyoverStart.getLongitude());
+
+        LocationData flyoverEnd = geocalculator.getMarker(new CalculateMarkerCommand(data.getSpottingLocationLatitude(), data.getSpottingLocationLongitude(), data.getFlyoverEndAzimuth()));
+        data.setEndMarkerLatitude(flyoverEnd.getLatitude());
+        data.setEndMarkerLongitude(flyoverEnd.getLongitude());
+    }
+
+    private void setSpottingLocation(FullSpottingData data, LocationData locationData) {
+        data.setSpottingLocationLatitude(locationData.getLatitude());
+        data.setSpottingLocationLongitude(locationData.getLongitude());
+    }
+
+    private void setFlyoverTimes(FlyOver flyover, FullSpottingData data, ZoneId zoneId) {
+        data.setFlyoverStartTime(Instant.ofEpochSecond(flyover.getStartUtc()).atZone(zoneId));
+        data.setFlyoverEndTime(Instant.ofEpochSecond(flyover.getEndUtc()).atZone(zoneId));
         }
 
     private Optional<CloudData> getCloudData(List<CloudData> cloudData, FlyOver flyover) {
@@ -60,9 +85,8 @@ public class SpotterServiceImpl implements SpotterService {
                 .findFirst();
     }
 
-    @NotNull
-    private FullFlyOverData convertToFull(FlyOver flyover) {
-        return new FullFlyOverData(flyover.getStartAzimuth(), flyover.getMaxAzimuth(), flyover.getMaxElevation(), flyover.getEndAzimuth());
+    private FullSpottingData convertToFull(FlyOver flyover) {
+        return new FullSpottingData(flyover.getStartAzimuth(), flyover.getMaxAzimuth(), flyover.getMaxElevation(), flyover.getEndAzimuth());
     }
 }
 

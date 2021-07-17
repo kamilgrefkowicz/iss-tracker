@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import pl.kamil.isstracker.shared.FlyOver;
-import pl.kamil.isstracker.shared.CurrentLocation;
+import pl.kamil.isstracker.shared.dto.FlyOver;
+import pl.kamil.isstracker.shared.dto.LocationData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,10 +32,10 @@ public class ISSLocatorImpl implements ISSLocator {
     private static final String MINIMUM_VISIBILITY_SECONDS = "300";
 
     @Override
-    public List<FlyOver> findFlyOversForNextThreeDays(CurrentLocation currentLocation)   {
+    public List<FlyOver> findFlyOversForNextThreeDays(LocationData locationData)   {
 
         RestTemplate restTemplate = new RestTemplate();
-        Map<String, String> parameters = getPathParameters(currentLocation);
+        Map<String, String> parameters = getPathParameters(locationData);
 
         ResponseEntity<String> response
                 = restTemplate.getForEntity(N2YO_BASE_URL , String.class, parameters);
@@ -61,11 +61,11 @@ public class ISSLocatorImpl implements ISSLocator {
     }
 
     @NotNull
-    private Map<String, String> getPathParameters(CurrentLocation currentLocation) {
+    private Map<String, String> getPathParameters(LocationData locationData) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("id", ISS_NORAD_ID);
-        parameters.put("observer_lat", currentLocation.getLatitude().toString());
-        parameters.put("observer_lng", currentLocation.getLongitude().toString());
+        parameters.put("observer_lat", locationData.getLatitude().toString());
+        parameters.put("observer_lng", locationData.getLongitude().toString());
         parameters.put("observer_alt", "0");
         parameters.put("days", DAYS_SEARCHED);
         parameters.put("min_visibility", MINIMUM_VISIBILITY_SECONDS);

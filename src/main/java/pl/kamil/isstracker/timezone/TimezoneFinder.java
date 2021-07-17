@@ -1,10 +1,10 @@
 package pl.kamil.isstracker.timezone;
 
-import pl.kamil.isstracker.shared.CurrentLocation;
+import pl.kamil.isstracker.shared.dto.LocationData;
 
 import java.time.ZoneId;
 
 public interface TimezoneFinder {
 
-    ZoneId getZoneId(CurrentLocation location);
+    ZoneId getZoneId(LocationData location);
 }

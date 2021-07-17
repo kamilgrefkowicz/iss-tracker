@@ -1,4 +1,4 @@
-package pl.kamil.isstracker.shared;
+package pl.kamil.isstracker.shared.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
@@ -7,10 +7,12 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class FlyOver {
-    private float startAzimuth;
-    private float maxAzimuth;
-    private float maxElevation;
-    private float endAzimuth;
+    private double spottingLocationLatitude;
+    private double spottingLocationLongitude;
+    private double startAzimuth;
+    private double maxAzimuth;
+    private double maxElevation;
+    private double endAzimuth;
     private int startUtc;
     private int endUtc;
 

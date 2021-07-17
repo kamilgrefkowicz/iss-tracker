@@ -1,4 +1,4 @@
-package pl.kamil.isstracker.shared;
+package pl.kamil.isstracker.shared.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
