@@ -1,4 +1,4 @@
-package pl.kamil.isstracker.shared.dto;
+package pl.kamil.isstracker.weather;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;

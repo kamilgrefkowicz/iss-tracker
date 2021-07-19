@@ -1,13 +1,18 @@
 package pl.kamil.isstracker.spotter;
 
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import pl.kamil.isstracker.iss.ISSLocator;
 import pl.kamil.isstracker.map_marker.CalculateMarkerCommand;
 import pl.kamil.isstracker.map_marker.Geocalculator;
 import pl.kamil.isstracker.shared.dto.LocationData;
-import pl.kamil.isstracker.shared.dto.FlyOver;
-import pl.kamil.isstracker.shared.dto.CloudData;
+import pl.kamil.isstracker.iss.FlyOver;
+import pl.kamil.isstracker.spotter.domain.FullSpottingData;
+import pl.kamil.isstracker.spotter.domain.IssSpottingData;
+import pl.kamil.isstracker.spotter.domain.PoorSpottingData;
+import pl.kamil.isstracker.weather.CloudData;
 import pl.kamil.isstracker.timezone.TimezoneFinder;
 import pl.kamil.isstracker.weather.WeatherService;
 
@@ -16,6 +21,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,33 +35,66 @@ public class SpotterServiceImpl implements SpotterService {
 
 
     @Override
-    public List<FullSpottingData> findPossibleFlyOvers(LocationData locationData) {
+    public List<PoorSpottingData> findPossibleFlyOvers(LocationData locationData) {
 
-        List<FlyOver> possibleFlyOvers = issLocator.findFlyOversForNextThreeDays(locationData);
-        List<CloudData> cloudData = weatherService.getWeatherData(locationData);
+        List<IssSpottingData> generatedData = generateFlyovers(locationData);
+
+        repository.saveAll(generatedData);
+
         ZoneId zoneId = timezoneFinder.getZoneId(locationData);
-        List<FullSpottingData> fullFlyoverDataSet = new ArrayList<>();
-
-        aggregateData(possibleFlyOvers, cloudData, zoneId, fullFlyoverDataSet, locationData);
-
-        return fullFlyoverDataSet;
+        return mapToPoorSpottingData(generatedData, zoneId);
     }
 
-    private void aggregateData(List<FlyOver> possibleFlyOvers, List<CloudData> cloudData, ZoneId zoneId, List<FullSpottingData> fullFlyoverDataSet, LocationData locationData) {
+    @SneakyThrows
+    @Override
+    public FullSpottingData getFullSpottingData(String id) {
+        Optional<IssSpottingData> rawData = repository.findById(id);
+        if (rawData.isEmpty()) throw new NotFoundException("Spotting data of requested id not found");
+
+        FullSpottingData fullSpottingData = mapToFullSpottingData(rawData.get());
+
+        setMapMarkers(fullSpottingData);
+        setFlyoverTimes(fullSpottingData, rawData.get());
+
+        return fullSpottingData;
+    }
+
+    private FullSpottingData mapToFullSpottingData(IssSpottingData issSpottingData) {
+        return new FullSpottingData(issSpottingData.getId(), issSpottingData.getSpottingLocationLatitude(), issSpottingData.getSpottingLocationLongitude(), issSpottingData.getFlyoverStartAzimuth(), issSpottingData.getFlyoverMaxAzimuth(), issSpottingData.getFlyoverMaxElevation(), issSpottingData.getFlyoverEndAzimuth(), issSpottingData.getCloudPercentage());
+    }
+
+    private List<PoorSpottingData> mapToPoorSpottingData(List<IssSpottingData> spottingData, ZoneId zoneId) {
+
+        return spottingData.stream()
+                .map(data -> new PoorSpottingData(data.getId(), Instant.ofEpochSecond(data.getStartUtc()).atZone(zoneId), data.getCloudPercentage(), data.getFlyoverMaxElevation()))
+                .collect(Collectors.toList());
+    }
+
+    private List<IssSpottingData> generateFlyovers(LocationData locationData) {
+        List<FlyOver> possibleFlyOvers = issLocator.findFlyOversForNextThreeDays(locationData);
+        List<CloudData> cloudData = weatherService.getWeatherData(locationData);
+
+        return aggregateData(possibleFlyOvers, cloudData, locationData);
+    }
+
+    private List<IssSpottingData> aggregateData(List<FlyOver> possibleFlyOvers, List<CloudData> cloudData, LocationData locationData) {
+        List<IssSpottingData> spottingData = new ArrayList<>();
         for (FlyOver flyover : possibleFlyOvers) {
-            FullSpottingData data = convertToFull(flyover);
-            setSpottingLocation(data, locationData);
-//            setFlyoverTimes(flyover, data, zoneId);
-            setMapMarkers(data);
+            IssSpottingData issSpottingData = convertToIssSpottingData(flyover);
+            setSpottingLocation(locationData, issSpottingData);
 
             Optional<CloudData> cloudDataOnFlyOver = getCloudData(cloudData, flyover);
             if (cloudDataOnFlyOver.isEmpty()) continue;
-            data.setCloudPercentage(cloudDataOnFlyOver.get().getCloudPercentage());
+            issSpottingData.setCloudPercentage(cloudDataOnFlyOver.get().getCloudPercentage());
 
-            data = repository.save(data);
-            
-            fullFlyoverDataSet.add(data);
+            spottingData.add(issSpottingData);
         }
+        return spottingData;
+    }
+
+    private void setSpottingLocation(LocationData locationData, IssSpottingData data) {
+        data.setSpottingLocationLatitude(locationData.getLatitude());
+        data.setSpottingLocationLongitude(locationData.getLongitude());
     }
 
     private void setMapMarkers(FullSpottingData data) {
@@ -69,15 +108,12 @@ public class SpotterServiceImpl implements SpotterService {
         data.setEndMarkerLongitude(flyoverEnd.getLongitude());
     }
 
-    private void setSpottingLocation(FullSpottingData data, LocationData locationData) {
-        data.setSpottingLocationLatitude(locationData.getLatitude());
-        data.setSpottingLocationLongitude(locationData.getLongitude());
-    }
 
-    private void setFlyoverTimes(FlyOver flyover, FullSpottingData data, ZoneId zoneId) {
-//        data.setFlyoverStartTime(Instant.ofEpochSecond(flyover.getStartUtc()).atZone(zoneId));
-//        data.setFlyoverEndTime(Instant.ofEpochSecond(flyover.getEndUtc()).atZone(zoneId));
-        }
+    private void setFlyoverTimes(FullSpottingData fullSpottingData, IssSpottingData rawData) {
+        ZoneId zoneId = timezoneFinder.getZoneId(new LocationData(fullSpottingData.getSpottingLocationLatitude(), fullSpottingData.getSpottingLocationLongitude()));
+        fullSpottingData.setFlyoverStartTime(Instant.ofEpochSecond(rawData.getStartUtc()).atZone(zoneId));
+        fullSpottingData.setFlyoverEndTime(Instant.ofEpochSecond(rawData.getEndUtc()).atZone(zoneId));
+    }
 
     private Optional<CloudData> getCloudData(List<CloudData> cloudData, FlyOver flyover) {
         int flyoverStartUtc = flyover.getStartUtc();
@@ -86,8 +122,8 @@ public class SpotterServiceImpl implements SpotterService {
                 .findFirst();
     }
 
-    private FullSpottingData convertToFull(FlyOver flyover) {
-        return new FullSpottingData(flyover.getStartAzimuth(), flyover.getMaxAzimuth(), flyover.getMaxElevation(), flyover.getEndAzimuth());
+    private IssSpottingData convertToIssSpottingData(FlyOver flyover) {
+        return new IssSpottingData(flyover.getStartAzimuth(), flyover.getMaxAzimuth(), flyover.getMaxElevation(), flyover.getEndAzimuth(), flyover.getStartUtc(), flyover.getEndUtc());
     }
 }
 

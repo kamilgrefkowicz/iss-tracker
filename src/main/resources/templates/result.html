@@ -32,8 +32,8 @@
             <td th:text="${flyover.cloudPercentage}"></td>
             <td th:text="${flyover.flyoverMaxElevation}"></td>
             <td>
-                <form th:action="@{/map}" th:method="get" target="_blank" th:object="${flyover}">
-                    <input type="hidden" th:field="*{id}">
+                <form th:action="@{/map}" th:method="get" target="_blank">
+                    <input type="hidden" th:attr="name='id'" th:value="${flyover.flyoverUUID}">
                     <input type="submit">
                 </form>
             </td>

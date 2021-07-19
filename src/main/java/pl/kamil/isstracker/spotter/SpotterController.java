@@ -7,7 +7,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import pl.kamil.isstracker.shared.dto.LocationData;
+import pl.kamil.isstracker.spotter.domain.FullSpottingData;
+import pl.kamil.isstracker.spotter.domain.PoorSpottingData;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -28,14 +31,16 @@ public class SpotterController {
     @GetMapping("get-result")
     public String getResults(Model model, @Valid LocationData locationData, BindingResult bindingResult) {
 
-        List<FullSpottingData> fullFlyoverDataSet = spotterService.findPossibleFlyOvers(locationData);
-        model.addAttribute("flyovers", fullFlyoverDataSet);
+        List<PoorSpottingData> spottingData = spotterService.findPossibleFlyOvers(locationData);
+        model.addAttribute("flyovers", spottingData);
 
         return "result";
 
     }
     @GetMapping("map")
-    public String showStreetView(Model model, @ModelAttribute FullSpottingData fullSpottingData) {
+    public String showStreetView(Model model, @RequestParam String id) {
+
+        FullSpottingData data = spotterService.getFullSpottingData(id);
         return "map";
     }
 }
