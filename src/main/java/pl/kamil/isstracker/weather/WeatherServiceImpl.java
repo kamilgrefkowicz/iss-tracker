@@ -54,8 +54,8 @@ public class WeatherServiceImpl implements WeatherService {
 
     private Map<String, String> getPathParameters(LocationData locationData) {
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("lat", locationData.getLatitude().toString());
-        parameters.put("lon", locationData.getLongitude().toString());
+        parameters.put("lat", String.valueOf(locationData.getLatitude()));
+        parameters.put("lon", String.valueOf(locationData.getLongitude()));
         parameters.put("API key", key);
         return parameters;
     }

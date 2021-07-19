@@ -28,8 +28,8 @@ public class SpotterController {
     @GetMapping("get-result")
     public String getResults(Model model, @Valid LocationData locationData, BindingResult bindingResult) {
 
-        List<FullSpottingData> possibleFlyOvers = spotterService.findPossibleFlyOvers(locationData);
-        model.addAttribute(possibleFlyOvers);
+        List<FullSpottingData> fullFlyoverDataSet = spotterService.findPossibleFlyOvers(locationData);
+        model.addAttribute("flyovers", fullFlyoverDataSet);
 
         return "result";
 

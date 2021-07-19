@@ -15,29 +15,22 @@
     <title> INSERT </title>
 </head>
 <body>
-<div th:each="flyover : ${fullFlyOverDataList}">
+<div th:each="flyover : ${flyovers}">
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>Start azimuth</th>
-            <th>Max azimuth</th>
-            <th>End azimuth</th>
-            <th>Max elevation</th>
             <th>Start time</th>
-            <th>End time</th>
             <th>Cloud % estimate</th>
+            <th>Max elevation</th>
             <th>link</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <td th:text="${flyover.startAzimuth}"></td>
-            <td th:text="${flyover.maxAzimuth}"></td>
-            <td th:text="${flyover.endAzimuth}"></td>
-            <td th:text="${flyover.maxElevation}"></td>
-            <td th:text="${#temporals.format(flyover.start, 'dd-MM-yyyy HH:mm')}"></td>
-            <td th:text="${#temporals.format(flyover.end, 'dd-MM-yyyy HH:mm')}"></td>
+
+            <td th:text="${#temporals.format(flyover.flyoverStartTime, 'dd-MM-yyyy HH:mm')}"></td>
             <td th:text="${flyover.cloudPercentage}"></td>
+            <td th:text="${flyover.flyoverMaxElevation}"></td>
             <td>
                 <form th:action="@{/map}" th:method="get" target="_blank">
                     <input type="submit">

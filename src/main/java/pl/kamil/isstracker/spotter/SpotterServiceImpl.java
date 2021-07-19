@@ -51,8 +51,7 @@ public class SpotterServiceImpl implements SpotterService {
             Optional<CloudData> cloudDataOnFlyOver = getCloudData(cloudData, flyover);
             if (cloudDataOnFlyOver.isEmpty()) continue;
             data.setCloudPercentage(cloudDataOnFlyOver.get().getCloudPercentage());
-
-
+            
             fullFlyoverDataSet.add(data);
         }
     }

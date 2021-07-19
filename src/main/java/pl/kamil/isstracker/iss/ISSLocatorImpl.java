@@ -64,8 +64,8 @@ public class ISSLocatorImpl implements ISSLocator {
     private Map<String, String> getPathParameters(LocationData locationData) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("id", ISS_NORAD_ID);
-        parameters.put("observer_lat", locationData.getLatitude().toString());
-        parameters.put("observer_lng", locationData.getLongitude().toString());
+        parameters.put("observer_lat", String.valueOf(locationData.getLatitude()));
+        parameters.put("observer_lng", String.valueOf(locationData.getLongitude()));
         parameters.put("observer_alt", "0");
         parameters.put("days", DAYS_SEARCHED);
         parameters.put("min_visibility", MINIMUM_VISIBILITY_SECONDS);

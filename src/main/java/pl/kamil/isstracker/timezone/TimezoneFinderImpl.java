@@ -14,7 +14,7 @@ public class TimezoneFinderImpl implements TimezoneFinder {
 
 
     public ZoneId getZoneId(LocationData location) {
-        Optional<ZoneId> zoneIdOptional = timeZoneEngine.query(location.getLatitude().doubleValue(), location.getLongitude().doubleValue());
+        Optional<ZoneId> zoneIdOptional = timeZoneEngine.query(location.getLatitude(), location.getLongitude());
         if (zoneIdOptional.isEmpty()) throw new RuntimeException();
         return zoneIdOptional.get();
     }
