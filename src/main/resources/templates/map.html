@@ -21,5 +21,17 @@
         th:src="@{'https://maps.googleapis.com/maps/api/js?key='+${@mapService.getGoggleMapApiKey()}+'&callback=initMap&libraries=&v=weekly'}"
         async
 ></script>
-<div id="pov" data-latitude="54.523000" data-longitude="18.539000"></div>
+<div th:object="${flyover}">
+    <script th:inline="javascript">
+        var centerPointLatitude = [[${flyover.getSpottingLocationLatitude()}]]
+        var centerPointLongitude = [[${flyover.getSpottingLocationLongitude()}]]
+        var startMarkerLatitude = [[${flyover.getStartMarkerLatitude()}]]
+        var startMarkerLongitude = [[${flyover.getStartMarkerLongitude()}]]
+        var endMarkerLatitude = [[${flyover.getEndMarkerLatitude()}]]
+        var endMarkerLongitude = [[${flyover.getEndMarkerLongitude()}]]
+    </script>
+
+</div>
+<div id="pov" data-latitude="*{}" data-longitude="18.539000"></div>
+<div></div>
 </body>

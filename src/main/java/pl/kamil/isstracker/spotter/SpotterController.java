@@ -41,6 +41,7 @@ public class SpotterController {
     public String showStreetView(Model model, @RequestParam String id) {
 
         FullSpottingData data = spotterService.getFullSpottingData(id);
+        model.addAttribute("flyover", data);
         return "map";
     }
 }

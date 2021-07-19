@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Service
 public class GeocalculatorImpl implements Geocalculator {
 
-    private static final float distanceToMarkerInMeters = 10000;
+    private static final float distanceToMarkerInMeters = 100;
 
     public LocationData getMarker(CalculateMarkerCommand command) {
 

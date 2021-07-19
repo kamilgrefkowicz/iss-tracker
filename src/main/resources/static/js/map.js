@@ -3,9 +3,7 @@ let panorama;
 function initMap() {
     const pov = document.querySelector('#pov');
 
-
-
-    const centerPoint = { lat: Number(pov.dataset.latitude), lng: Number(pov.dataset.longitude) };
+    const centerPoint = { lat: centerPointLatitude, lng: centerPointLongitude };
     // Set up the map
     const map = new google.maps.Map(document.getElementById("map"), {
         center: centerPoint,
@@ -14,24 +12,22 @@ function initMap() {
     });
     document.getElementById("toggle").addEventListener("click", toggleStreetView);
     // Set up the markers on the map
-    const cafeMarker = new google.maps.Marker({
-        position: { lat: 40.730031, lng: -73.991428 },
-        map,
-        icon: "https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=cafe|FFFF00",
+    const startMarker = new google.maps.Marker({
+        position: { lat: startMarkerLatitude, lng: startMarkerLongitude },
+        map: map,
+        icon: "./icons/start_icon.svg",
         title: "Cafe",
     });
-    const bankMarker = new google.maps.Marker({
-        position: { lat: 40.729681, lng: -73.991138 },
-        map,
-        icon: "https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=dollar|FFFF00",
+    const endMarker = new google.maps.Marker({
+        position: { lat: endMarkerLatitude, lng: endMarkerLongitude },
+        map: map,
+        // icon: "https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=dollar|FFFF00",
+        icon: "https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=cafe|FFFF00",
         title: "Bank",
+        visible: true
+            // <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="</a></div>
     });
-    const busMarker = new google.maps.Marker({
-        position: { lat: 40.729559, lng: -73.990741 },
-        map,
-        icon: "https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=bus|FFFF00",
-        title: "Bus Stop",
-    });
+
     // We get the map's default panorama and set up some defaults.
     // Note that we don't yet set it visible.
     panorama = map.getStreetView(); // TODO fix type
