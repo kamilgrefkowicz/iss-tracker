@@ -5,9 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.kamil.isstracker.shared.dto.LocationData;
-import pl.kamil.isstracker.shared.dto.FullSpottingData;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -35,7 +35,7 @@ public class SpotterController {
 
     }
     @GetMapping("map")
-    public String showStreetView(Model model) {
+    public String showStreetView(Model model, @ModelAttribute FullSpottingData fullSpottingData) {
         return "map";
     }
 }

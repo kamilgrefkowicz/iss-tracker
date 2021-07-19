@@ -8,7 +8,6 @@ import pl.kamil.isstracker.map_marker.Geocalculator;
 import pl.kamil.isstracker.shared.dto.LocationData;
 import pl.kamil.isstracker.shared.dto.FlyOver;
 import pl.kamil.isstracker.shared.dto.CloudData;
-import pl.kamil.isstracker.shared.dto.FullSpottingData;
 import pl.kamil.isstracker.timezone.TimezoneFinder;
 import pl.kamil.isstracker.weather.WeatherService;
 
@@ -26,6 +25,7 @@ public class SpotterServiceImpl implements SpotterService {
     private final WeatherService weatherService;
     private final TimezoneFinder timezoneFinder;
     private final Geocalculator geocalculator;
+    private final SpottingDataRepository repository;
 
 
     @Override
@@ -45,12 +45,14 @@ public class SpotterServiceImpl implements SpotterService {
         for (FlyOver flyover : possibleFlyOvers) {
             FullSpottingData data = convertToFull(flyover);
             setSpottingLocation(data, locationData);
-            setFlyoverTimes(flyover, data, zoneId);
+//            setFlyoverTimes(flyover, data, zoneId);
             setMapMarkers(data);
 
             Optional<CloudData> cloudDataOnFlyOver = getCloudData(cloudData, flyover);
             if (cloudDataOnFlyOver.isEmpty()) continue;
             data.setCloudPercentage(cloudDataOnFlyOver.get().getCloudPercentage());
+
+            data = repository.save(data);
             
             fullFlyoverDataSet.add(data);
         }
@@ -73,8 +75,8 @@ public class SpotterServiceImpl implements SpotterService {
     }
 
     private void setFlyoverTimes(FlyOver flyover, FullSpottingData data, ZoneId zoneId) {
-        data.setFlyoverStartTime(Instant.ofEpochSecond(flyover.getStartUtc()).atZone(zoneId));
-        data.setFlyoverEndTime(Instant.ofEpochSecond(flyover.getEndUtc()).atZone(zoneId));
+//        data.setFlyoverStartTime(Instant.ofEpochSecond(flyover.getStartUtc()).atZone(zoneId));
+//        data.setFlyoverEndTime(Instant.ofEpochSecond(flyover.getEndUtc()).atZone(zoneId));
         }
 
     private Optional<CloudData> getCloudData(List<CloudData> cloudData, FlyOver flyover) {
