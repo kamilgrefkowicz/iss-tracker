@@ -12,9 +12,8 @@ public class MarkerUpdateController {
     private final Geocalculator geocalculator;
 
     @GetMapping
-    public LocationData getMarkerData(@RequestParam String centerPointLatitude, @RequestParam String centerPointLongitude, @RequestParam String azimuth) {
+    public LocationData getMarkerData(@RequestParam double centerPointLatitude, @RequestParam double centerPointLongitude, @RequestParam double azimuth) {
 
-//        return geocalculator.getMarker(command);
-        return new LocationData();
+        return geocalculator.getMarker(new CalculateMarkerCommand(centerPointLatitude, centerPointLongitude, azimuth));
     }
 }

@@ -18,24 +18,22 @@ function initMap() {
         scaledSize: new google.maps.Size(100, 100),
     };
 
-    const startMarker = new google.maps.Marker({
+    let startMarker = new google.maps.Marker({
         position: { lat: startMarkerLatitude, lng: startMarkerLongitude },
         map: map,
         icon: startIcon,
         title: "Cafe",
     });
+
     const endMarker = new google.maps.Marker({
         position: { lat: endMarkerLatitude, lng: endMarkerLongitude },
         map: map,
-        // icon: "https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=dollar|FFFF00",
         icon: "https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=cafe|FFFF00",
         title: "Bank",
         visible: true
-            // <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="</a></div>
     });
 
-    // We get the map's default panorama and set up some defaults.
-    // Note that we don't yet set it visible.
+
     panorama = map.getStreetView(); // TODO fix type
     panorama.setPosition(centerPoint);
     panorama.setPov(
@@ -45,9 +43,9 @@ function initMap() {
         }
     );
     panorama.addListener('position_changed', () => {
-        console.log(panorama.getPosition().lat())
 
-        let startMarker = updateMarker(panorama.getPosition().lat, panorama.getPosition().lng, startAzimuth);
+        startMarker.setPosition(updateMarker(panorama.getPosition().lat, panorama.getPosition().lng, startAzimuth));
+
     })
 }
 
@@ -57,15 +55,18 @@ function updateMarker(lat, lng, azimuth) {
         centerPointLongitude: lng,
         azimuth: azimuth
     }
+    var latLng;
 
     $.ajax({
         type: "GET",
         url:  "/update",
         data: command,
+        async: false,
         success: function(result) {
-            return new google.maps.LatLng(result.latitude, result.longitude)
+            latLng = new google.maps.LatLng(result.latitude, result.longitude)
         }
     })
+    return latLng
 }
 
 function toggleStreetView() {
