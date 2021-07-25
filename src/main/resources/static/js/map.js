@@ -1,21 +1,27 @@
 let panorama;
 
 function initMap() {
-    const pov = document.querySelector('#pov');
 
-    const centerPoint = { lat: centerPointLatitude, lng: centerPointLongitude };
+    const centerPoint = { lat: centerPointLat, lng: centerPointLng };
     // Set up the map
     const map = new google.maps.Map(document.getElementById("map"), {
+        scaleControl: true,
         center: centerPoint,
         zoom: 18,
         streetViewControl: false,
     });
     document.getElementById("toggle").addEventListener("click", toggleStreetView);
-    // Set up the markers on the map
+
+    var startIcon = {
+        url: "./icons/start_icon.svg",
+        size: new google.maps.Size(100, 100),
+        scaledSize: new google.maps.Size(100, 100),
+    };
+
     const startMarker = new google.maps.Marker({
         position: { lat: startMarkerLatitude, lng: startMarkerLongitude },
         map: map,
-        icon: "./icons/start_icon.svg",
+        icon: startIcon,
         title: "Cafe",
     });
     const endMarker = new google.maps.Marker({
@@ -38,12 +44,34 @@ function initMap() {
             pitch: 0,
         }
     );
+    panorama.addListener('position_changed', () => {
+        console.log(panorama.getPosition().lat())
+
+        let startMarker = updateMarker(panorama.getPosition().lat, panorama.getPosition().lng, startAzimuth);
+    })
+}
+
+function updateMarker(lat, lng, azimuth) {
+    var command = {
+        centerPointLatitude: lat,
+        centerPointLongitude: lng,
+        azimuth: azimuth
+    }
+
+    $.ajax({
+        type: "GET",
+        url:  "/update",
+        data: command,
+        success: function(result) {
+            return new google.maps.LatLng(result.latitude, result.longitude)
+        }
+    })
 }
 
 function toggleStreetView() {
     const toggle = panorama.getVisible();
 
-    if (toggle == false) {
+    if (toggle === false) {
         panorama.setVisible(true);
     } else {
         panorama.setVisible(false);

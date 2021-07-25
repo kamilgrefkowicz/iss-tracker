@@ -6,12 +6,10 @@ import com.grum.geocalc.Point;
 import org.springframework.stereotype.Service;
 import pl.kamil.isstracker.shared.dto.LocationData;
 
-import java.math.BigDecimal;
-
 @Service
 public class GeocalculatorImpl implements Geocalculator {
 
-    private static final float distanceToMarkerInMeters = 100;
+    private static final float DISTANCE_TO_MARKER_IN_METERS = 50;
 
     public LocationData getMarker(CalculateMarkerCommand command) {
 
@@ -20,7 +18,7 @@ public class GeocalculatorImpl implements Geocalculator {
 
         Point centerPoint = Point.at(centerLatitude, centerLongitude);
 
-        Point marker = EarthCalc.gcd.pointAt(centerPoint, command.getAzimuth(),distanceToMarkerInMeters);
+        Point marker = EarthCalc.gcd.pointAt(centerPoint, command.getAzimuth(), DISTANCE_TO_MARKER_IN_METERS);
 
         return new LocationData(marker.latitude, marker.longitude);
 

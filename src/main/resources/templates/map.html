@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" href="/css/map.css" />
   <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
   <script th:src="@{/js/map.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
     <title> INSERT </title>
 </head>
 <body>
@@ -15,6 +17,7 @@
     <input type="button" value="Toggle Street View" id="toggle" />
 </div>
 <div id="map"></div>
+<div id="pano" style="width: 45%; height: 100%; float: left"></div>
 
 
 <script
@@ -23,15 +26,15 @@
 ></script>
 <div th:object="${flyover}">
     <script th:inline="javascript">
-        var centerPointLatitude = [[${flyover.getSpottingLocationLatitude()}]]
-        var centerPointLongitude = [[${flyover.getSpottingLocationLongitude()}]]
+        var centerPointLat = [[${flyover.getSpottingLocationLatitude()}]]
+        var centerPointLng = [[${flyover.getSpottingLocationLongitude()}]]
         var startMarkerLatitude = [[${flyover.getStartMarkerLatitude()}]]
         var startMarkerLongitude = [[${flyover.getStartMarkerLongitude()}]]
         var endMarkerLatitude = [[${flyover.getEndMarkerLatitude()}]]
         var endMarkerLongitude = [[${flyover.getEndMarkerLongitude()}]]
+        var startAzimuth = [[${flyoverStartAzimuth}]]
+        var endAzimuth = [[${flyoverEndAzimuth}]]
     </script>
 
 </div>
-<div id="pov" data-latitude="*{}" data-longitude="18.539000"></div>
-<div></div>
 </body>
