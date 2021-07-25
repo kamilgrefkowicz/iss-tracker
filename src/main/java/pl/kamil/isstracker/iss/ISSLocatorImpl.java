@@ -55,6 +55,7 @@ public class ISSLocatorImpl implements ISSLocator {
             e.printStackTrace();
             throw new RestClientException("Something went wrong on ISS tracking api's side");
         }
+        //todo: handle no passes
         root.get("passes").forEach(pass -> possFlyOvers.add(new FlyOver(pass)));
         return possFlyOvers;
     }
