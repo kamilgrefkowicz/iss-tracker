@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +33,8 @@ public class ISSLocatorImpl implements ISSLocator {
     private static final String MINIMUM_VISIBILITY_SECONDS = "300";
 
     @Override
-    public List<FlyOver> findFlyOversForNextThreeDays(LocationData locationData)   {
+    @Async
+    public CompletableFuture<List<FlyOver>> findFlyOversForNextThreeDays(LocationData locationData)   {
 
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> parameters = getPathParameters(locationData);
@@ -41,7 +44,7 @@ public class ISSLocatorImpl implements ISSLocator {
 
         if (response.getStatusCode().isError()) throw new RestClientException("ISS tracking api is down");
 
-        return parseFlyOverData(response);
+        return CompletableFuture.completedFuture(parseFlyOverData(response));
     }
 
     @NotNull

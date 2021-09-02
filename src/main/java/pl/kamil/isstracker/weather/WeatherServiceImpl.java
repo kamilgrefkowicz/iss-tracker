@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +28,8 @@ public class WeatherServiceImpl implements WeatherService {
     private static final String OPEN_WEATHER_MAP_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}";
 
     @Override
-    public List<CloudData> getWeatherData(LocationData locationData) {
-
+    @Async
+    public CompletableFuture<List<CloudData>> getWeatherData(LocationData locationData) {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> parameters = getPathParameters(locationData);
 
@@ -47,7 +49,7 @@ public class WeatherServiceImpl implements WeatherService {
         }
         root.get("list").forEach(timestamp -> cloudData.add(new CloudData(timestamp)));
 
-        return cloudData;
+        return CompletableFuture.completedFuture(cloudData);
 
     }
 

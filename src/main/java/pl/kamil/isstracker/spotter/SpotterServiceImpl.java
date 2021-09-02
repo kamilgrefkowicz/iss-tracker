@@ -19,8 +19,11 @@ import pl.kamil.isstracker.weather.WeatherService;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,10 +74,15 @@ public class SpotterServiceImpl implements SpotterService {
     }
 
     private List<IssSpottingData> generateFlyovers(LocationData locationData) {
-        List<FlyOver> possibleFlyOvers = issLocator.findFlyOversForNextThreeDays(locationData);
-        List<CloudData> cloudData = weatherService.getWeatherData(locationData);
+        CompletableFuture<List<CloudData>> cloudData = weatherService.getWeatherData(locationData);
+        CompletableFuture<List<FlyOver>> possibleFlyOvers = issLocator.findFlyOversForNextThreeDays(locationData);
 
-        return aggregateData(possibleFlyOvers, cloudData, locationData);
+        try {
+            return aggregateData(possibleFlyOvers.get(), cloudData.get(), locationData);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
 
     private List<IssSpottingData> aggregateData(List<FlyOver> possibleFlyOvers, List<CloudData> cloudData, LocationData locationData) {
