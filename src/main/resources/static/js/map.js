@@ -11,12 +11,12 @@ function initMap() {
     });
     document.getElementById("toggle").addEventListener("click", toggleStreetView);
 
-    var startIcon = {
+    const startIcon = {
         url: "./icons/start_icon.svg",
         size: new google.maps.Size(200, 200),
         scaledSize: new google.maps.Size(200, 200),
     };
-    var endIcon = {
+    const endIcon = {
         url: "/icons/end_icon.svg",
         size: new google.maps.Size(200, 200),
         scaledSize: new google.maps.Size(200, 200),
@@ -53,12 +53,12 @@ function initMap() {
 }
 
 function updateMarker(lat, lng, azimuth) {
-    var command = {
+    const command = {
         centerPointLatitude: lat,
         centerPointLongitude: lng,
         azimuth: azimuth
     }
-    var latLng;
+    let latLng;
 
     $.ajax({
         type: "GET",

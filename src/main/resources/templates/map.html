@@ -26,14 +26,14 @@
 ></script>
 <div th:object="${flyover}">
     <script th:inline="javascript">
-        var centerPointLat = [[${flyover.getSpottingLocationLatitude()}]]
-        var centerPointLng = [[${flyover.getSpottingLocationLongitude()}]]
-        var startMarkerLatitude = [[${flyover.getStartMarkerLatitude()}]]
-        var startMarkerLongitude = [[${flyover.getStartMarkerLongitude()}]]
-        var endMarkerLatitude = [[${flyover.getEndMarkerLatitude()}]]
-        var endMarkerLongitude = [[${flyover.getEndMarkerLongitude()}]]
-        var startAzimuth = [[${flyover.flyoverStartAzimuth}]]
-        var endAzimuth = [[${flyover.flyoverEndAzimuth}]]
+        const centerPointLat = [[${flyover.getSpottingLocationLatitude()}]]
+        const centerPointLng = [[${flyover.getSpottingLocationLongitude()}]]
+        const startMarkerLatitude = [[${flyover.getStartMarkerLatitude()}]]
+        const startMarkerLongitude = [[${flyover.getStartMarkerLongitude()}]]
+        const endMarkerLatitude = [[${flyover.getEndMarkerLatitude()}]]
+        const endMarkerLongitude = [[${flyover.getEndMarkerLongitude()}]]
+        const startAzimuth = [[${flyover.flyoverStartAzimuth}]]
+        const endAzimuth = [[${flyover.flyoverEndAzimuth}]]
     </script>
 
 </div>
