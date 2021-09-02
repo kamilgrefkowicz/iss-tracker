@@ -31,6 +31,11 @@ public class SpotterController {
     @GetMapping("get-result")
     public String getResults(Model model, @Valid LocationData locationData, BindingResult bindingResult) {
 
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("location", new LocationData());
+            return "home";
+        }
+
         List<PoorSpottingData> spottingData = spotterService.findPossibleFlyOvers(locationData);
         model.addAttribute("flyovers", spottingData);
 
