@@ -11,4 +11,5 @@ public interface SpotterService {
     List<PoorSpottingData> findPossibleFlyOvers(LocationData locationData);
 
     FullSpottingData getFullSpottingData(String id);
+
 }

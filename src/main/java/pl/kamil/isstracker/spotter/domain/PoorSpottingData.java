@@ -9,8 +9,13 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 public class PoorSpottingData {
 
-    private String flyoverUUID;
-    private ZonedDateTime flyoverStartTime;
+    private ZonedDateTime startTime;
+    private ZonedDateTime endTime;
+
     private int cloudPercentage;
-    private double flyoverMaxElevation;
+    private double maxElevation;
+
+    private double startAzimuth;
+    private double endAzimuth;
+
 }

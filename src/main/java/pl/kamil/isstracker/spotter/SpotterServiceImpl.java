@@ -4,16 +4,16 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import pl.kamil.isstracker.iss.FlyOver;
 import pl.kamil.isstracker.iss.ISSLocator;
 import pl.kamil.isstracker.map_marker.CalculateMarkerCommand;
 import pl.kamil.isstracker.map_marker.Geocalculator;
 import pl.kamil.isstracker.shared.dto.LocationData;
-import pl.kamil.isstracker.iss.FlyOver;
 import pl.kamil.isstracker.spotter.domain.FullSpottingData;
 import pl.kamil.isstracker.spotter.domain.IssSpottingData;
 import pl.kamil.isstracker.spotter.domain.PoorSpottingData;
-import pl.kamil.isstracker.weather.CloudData;
 import pl.kamil.isstracker.timezone.TimezoneFinder;
+import pl.kamil.isstracker.weather.CloudData;
 import pl.kamil.isstracker.weather.WeatherService;
 
 import java.time.Instant;
@@ -48,6 +48,7 @@ public class SpotterServiceImpl implements SpotterService {
         return mapToPoorSpottingData(generatedData, zoneId);
     }
 
+
     @SneakyThrows
     @Override
     public FullSpottingData getFullSpottingData(String id) {
@@ -69,7 +70,13 @@ public class SpotterServiceImpl implements SpotterService {
     private List<PoorSpottingData> mapToPoorSpottingData(List<IssSpottingData> spottingData, ZoneId zoneId) {
 
         return spottingData.stream()
-                .map(data -> new PoorSpottingData(data.getId(), Instant.ofEpochSecond(data.getStartUtc()).atZone(zoneId), data.getCloudPercentage(), data.getFlyoverMaxElevation()))
+                .map(data -> new PoorSpottingData(
+                        Instant.ofEpochSecond(data.getStartUtc()).atZone(zoneId),
+                        Instant.ofEpochSecond(data.getEndUtc()).atZone(zoneId),
+                        data.getCloudPercentage(),
+                        data.getFlyoverMaxElevation(),
+                        data.getFlyoverStartAzimuth(),
+                        data.getFlyoverEndAzimuth()))
                 .collect(Collectors.toList());
     }
 
@@ -92,10 +99,11 @@ public class SpotterServiceImpl implements SpotterService {
             setSpottingLocation(locationData, issSpottingData);
 
             Optional<CloudData> cloudDataOnFlyOver = getCloudData(cloudData, flyover);
+            spottingData.add(issSpottingData);
+
             if (cloudDataOnFlyOver.isEmpty()) continue;
             issSpottingData.setCloudPercentage(cloudDataOnFlyOver.get().getCloudPercentage());
 
-            spottingData.add(issSpottingData);
         }
         return spottingData;
     }

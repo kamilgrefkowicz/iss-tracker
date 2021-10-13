@@ -28,15 +28,15 @@
         <tbody>
         <tr>
 
-            <td th:text="${#temporals.format(flyover.flyoverStartTime, 'dd-MM-yyyy HH:mm')}"></td>
+            <!--            <td th:text="${#temporals.format(flyover.flyoverStartTime, 'dd-MM-yyyy HH:mm')}"></td>-->
             <td th:text="${flyover.cloudPercentage}"></td>
-            <td th:text="${flyover.flyoverMaxElevation}"></td>
-            <td>
-                <form th:action="@{/map}" th:method="get" target="_blank">
-                    <input type="hidden" th:attr="name='id'" th:value="${flyover.flyoverUUID}">
-                    <input type="submit">
-                </form>
-            </td>
+            <td th:text="${flyover.maxElevation}"></td>
+            <!--            <td>-->
+            <!--                <form th:action="@{/map}" th:method="get" target="_blank">-->
+            <!--                    <input type="hidden" th:attr="name='id'" th:value="${flyover.flyoverUUID}">-->
+            <!--                    <input type="submit">-->
+            <!--                </form>-->
+            <!--            </td>-->
         </tr>
         </tbody>
     </table>

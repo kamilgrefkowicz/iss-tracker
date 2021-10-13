@@ -1,0 +1,69 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-image: url("app/night.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+
+  justify-content: center;
+}
+
+.container {
+  width: 80vh;
+  /* height: 80vh; */
+  background-color: #eee7ff;
+  margin-top: 20px;
+  border-radius: 30px;
+  padding: 0 20px;
+  min-height: 80vh;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: white; */
+  text-align: center;
+}
+.flex-stretch {
+  justify-content: space-between;
+}
+
+h2 {
+  text-align: center;
+}
+
+.inner-container {
+  padding: 1rem;
+}
+
+.form-group {
+  width: 40%;
+}
+
+.form-title {
+  font-weight: 500;
+}
+
+.form-element {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  background-color: #beb9cc;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 1rem;
+}
