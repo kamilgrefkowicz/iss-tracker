@@ -1,0 +1,25 @@
+<div *ngIf="flyovers.length === 0">
+  <mat-card>
+    <mat-card-title>No flyovers</mat-card-title>
+  </mat-card>
+</div>
+<div *ngIf="flyovers.length > 0">
+  <ul>
+    <li *ngFor="let flyover of flyovers">
+      <mat-card>
+        <mat-card-title>{{ flyover.startTime | date: "short" }}</mat-card-title>
+        <mat-card-content>
+          <div class="flex flex-stretch">
+            <span>Clouds: {{ flyover.cloudPercentage }}%</span>
+
+            <span
+            >Max elevation:
+              {{ flyover.maxElevation | number: "2.0-0" }}%</span
+            >
+            <button mat-raised-button>Show me!</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </li>
+  </ul>
+</div>
