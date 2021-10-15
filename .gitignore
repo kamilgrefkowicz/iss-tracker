@@ -22,6 +22,8 @@ target/
 ### Local data ###
 application.properties
 
+**/environments/
+
 
 # compiled output
 /dist

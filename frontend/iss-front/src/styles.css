@@ -67,3 +67,8 @@ ul {
 li {
   margin-bottom: 1rem;
 }
+
+#map {
+  height: 70vh;
+  width: 100%;
+}

@@ -4,9 +4,9 @@ function initMap() {
 
     const centerPoint = { lat: centerPointLat, lng: centerPointLng };
     const map = new google.maps.Map(document.getElementById("map"), {
-        scaleControl: true,
         center: centerPoint,
         zoom: 18,
+        scaleControl: true,
         streetViewControl: false,
     });
     document.getElementById("toggle").addEventListener("click", toggleStreetView);

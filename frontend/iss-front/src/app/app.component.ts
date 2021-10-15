@@ -10,7 +10,7 @@ import { LocatorService } from './locator.service';
 export class AppComponent implements OnInit {
   isLocationChosen: boolean = false;
   isFlyoverChosen: boolean = false;
-  selectedIndex: number = 0;
+  selectedIndex: number = 2;
 
   constructor(private locatorService: LocatorService) {}
 
