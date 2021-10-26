@@ -11,10 +11,10 @@ public class MarkerUpdateController {
 
     private final Geocalculator geocalculator;
 
-    @GetMapping
-    @CrossOrigin
-    public LocationData getMarkerData(@RequestParam double centerPointLatitude, @RequestParam double centerPointLongitude, @RequestParam double azimuth) {
-
-        return geocalculator.getMarker(new CalculateMarkerCommand(centerPointLatitude, centerPointLongitude, azimuth));
-    }
+//    @GetMapping
+//    @CrossOrigin
+//    public LocationData getMarkerData(@RequestParam double centerPointLatitude, @RequestParam double centerPointLongitude, @RequestParam double azimuth) {
+//
+//        return geocalculator.getMarker(new CalculateMarkerCommand(centerPointLatitude, centerPointLongitude, azimuth));
+//    }
 }

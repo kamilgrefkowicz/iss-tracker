@@ -1,17 +1,17 @@
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet> -->
 <div class="container">
   <mat-tab-group
     mat-align-tabs="center"
     [selectedIndex]="selectedIndex"
     (selectedIndexChange)="changeIndex($event)"
   >
-    <mat-tab label="First">
+    <mat-tab label="First" id="index0">
       <app-location-input></app-location-input>
     </mat-tab>
-    <mat-tab label="Second" [disabled]="!isLocationChosen">
+    <mat-tab label="Second" [disabled]="!isLocationChosen" id="index1">
       <app-flyover-list></app-flyover-list>
     </mat-tab>
-    <mat-tab label="Third">
+    <mat-tab label="Third" [disabled]="!isFlyoverChosen" id="index2">
       <app-flyover-single></app-flyover-single>
     </mat-tab>
   </mat-tab-group>

@@ -13,10 +13,12 @@
             <span>Clouds: {{ flyover.cloudPercentage }}%</span>
 
             <span
-            >Max elevation:
+              >Max elevation:
               {{ flyover.maxElevation | number: "2.0-0" }}%</span
             >
-            <button mat-raised-button>Show me!</button>
+            <button mat-raised-button (click)="onFlyoverChosen(flyover)">
+              Show me!
+            </button>
           </div>
         </mat-card-content>
       </mat-card>

@@ -13,8 +13,8 @@ public class GeocalculatorImpl implements Geocalculator {
 
     public LocationData getMarker(CalculateMarkerCommand command) {
 
-        Coordinate centerLatitude = Coordinate.fromDegrees(command.getCenterPointLatitude());
-        Coordinate centerLongitude = Coordinate.fromDegrees(command.getCenterPointLongitude());
+        Coordinate centerLatitude = Coordinate.fromDegrees(command.getCenterPoint().getLatitude());
+        Coordinate centerLongitude = Coordinate.fromDegrees(command.getCenterPoint().getLongitude());
 
         Point centerPoint = Point.at(centerLatitude, centerLongitude);
 

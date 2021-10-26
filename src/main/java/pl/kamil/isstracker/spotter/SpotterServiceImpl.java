@@ -42,7 +42,7 @@ public class SpotterServiceImpl implements SpotterService {
 
         List<IssSpottingData> generatedData = generateFlyovers(locationData);
 
-        repository.saveAll(generatedData);
+//        repository.saveAll(generatedData);
 
         ZoneId zoneId = timezoneFinder.getZoneId(locationData);
         return mapToPoorSpottingData(generatedData, zoneId);
@@ -114,14 +114,14 @@ public class SpotterServiceImpl implements SpotterService {
     }
 
     private void setMapMarkers(FullSpottingData data) {
-
-        LocationData flyoverStart = geocalculator.getMarker(new CalculateMarkerCommand(data.getSpottingLocationLatitude(), data.getSpottingLocationLongitude(), data.getFlyoverStartAzimuth()));
-        data.setStartMarkerLatitude(flyoverStart.getLatitude());
-        data.setStartMarkerLongitude(flyoverStart.getLongitude());
-
-        LocationData flyoverEnd = geocalculator.getMarker(new CalculateMarkerCommand(data.getSpottingLocationLatitude(), data.getSpottingLocationLongitude(), data.getFlyoverEndAzimuth()));
-        data.setEndMarkerLatitude(flyoverEnd.getLatitude());
-        data.setEndMarkerLongitude(flyoverEnd.getLongitude());
+//
+//        LocationData flyoverStart = geocalculator.getMarker(new CalculateMarkerCommand(data.getSpottingLocationLatitude(), data.getSpottingLocationLongitude(), data.getFlyoverStartAzimuth()));
+//        data.setStartMarkerLatitude(flyoverStart.getLatitude());
+//        data.setStartMarkerLongitude(flyoverStart.getLongitude());
+//
+//        LocationData flyoverEnd = geocalculator.getMarker(new CalculateMarkerCommand(data.getSpottingLocationLatitude(), data.getSpottingLocationLongitude(), data.getFlyoverEndAzimuth()));
+//        data.setEndMarkerLatitude(flyoverEnd.getLatitude());
+//        data.setEndMarkerLongitude(flyoverEnd.getLongitude());
     }
 
 
